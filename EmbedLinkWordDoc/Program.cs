@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,14 +12,23 @@ namespace EmbedLinkWordDoc
 {
     class Program
     {
-        private static Random randString = new Random();
-        private static Random randLength = new Random();
+        private static Random randString = new Random(DateTime.Now.Millisecond);
+        private static Random randLength = new Random(DateTime.Now.Millisecond);
+        private static Random rand_Word = new Random(DateTime.Now.Millisecond);
+        private static string FilePath = "";
 
         static void Main(string[] args)
         {
             try
             {
-                CreateWordDocument(args[0]);
+                if (args.Length == 1)
+                {
+                    CreateWordDocument(args[0]);
+                }
+                else
+                {
+                    CreateWordDocument(args[0],args[1]);
+                }
             }
             catch (Exception e)
             {
@@ -28,7 +37,7 @@ namespace EmbedLinkWordDoc
             }
         }
 
-        static void CreateWordDocument(string Link)
+        private static void CreateWordDocument(string Link,string FilePath="")
         {
             try
             {
@@ -40,9 +49,16 @@ namespace EmbedLinkWordDoc
                 object style_name = "Heading 1";
                 TEXTBLOCK.Range.set_Style(ref style_name);
                 TEXTBLOCK.Range.InsertParagraphAfter();
-                TEXTBLOCK.Range.Text = RandomString(randLength.Next(5, 999));
+                if (string.IsNullOrEmpty(FilePath))
+                { 
+                    TEXTBLOCK.Range.Text = RandomString_Contents(randLength.Next(5, 999));
+                }
+                else
+                {
+                    TEXTBLOCK.Range.Text = RandomString_Words(FilePath);
+                }
                 TEXTBLOCK.Range.InsertParagraphAfter();
-                object filename = Directory.GetCurrentDirectory()+"\\"+ RandomString(randLength.Next(3,12))+".doc";
+                object filename = Directory.GetCurrentDirectory() + "\\" + RandomString_Contents(randLength.Next(3, 12)) + ".doc";
                 string PREV_FONT = TEXTBLOCK.Range.Font.Name;
                 TEXTBLOCK.Range.Font.Name = "Courier New";
                 TEXTBLOCK.Range.InsertParagraphAfter();
@@ -72,11 +88,16 @@ namespace EmbedLinkWordDoc
             }
         }
 
-        private static string RandomString(int length)
+        private static string RandomString_Contents(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789      ";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[randString.Next(s.Length)]).ToArray());
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[randString.Next(s.Length)]).ToArray());
+        }
+
+        private static string RandomString_Words(string FilePath)
+        {
+            string[] FileContents = File.ReadAllLines(FilePath);
+            return new string(Enumerable.Repeat(FileContents[rand_Word.Next(0, FileContents.Length-1)], FileContents.Length - 1).Select(s => s[randString.Next(s.Length)]).ToArray());
         }
     }
 }
