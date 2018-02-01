@@ -5,6 +5,7 @@ Only takes 1 arg which is the link to embed in word document.
 
 # Example:
 EmbedLinkWordDoc.exe https://www.github.com
+EmbedLinkWordDoc.exe https://www.github.com C:\FileOfWordOrPhrases.txt
 
 App will then output Word document (.doc) in current dir.
 
