@@ -17,7 +17,15 @@ namespace EmbedLinkWordDoc
 
         static void Main(string[] args)
         {
-            CreateWordDocument(args[0]);
+            try
+            {
+                CreateWordDocument(args[0]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
         static void CreateWordDocument(string Link)
@@ -25,7 +33,7 @@ namespace EmbedLinkWordDoc
             try
             {
                 Microsoft.Office.Interop.Word._Application MSWORD = new Microsoft.Office.Interop.Word.Application();
-                MSWORD.Visible = true;
+                MSWORD.Visible = false;
                 object missing = Type.Missing;
                 Microsoft.Office.Interop.Word._Document MSWORDdoc = MSWORD.Documents.Add(ref missing, ref missing, ref missing, ref missing);
                 Microsoft.Office.Interop.Word.Paragraph TEXTBLOCK = MSWORDdoc.Paragraphs.Add(ref missing);
@@ -55,6 +63,7 @@ namespace EmbedLinkWordDoc
                 object save_changes = false;
                 MSWORDdoc.Close(ref save_changes, ref missing, ref missing);
                 MSWORD.Quit(ref save_changes, ref missing, ref missing);
+                Console.WriteLine("App done! .Doc created!");
             }
             catch (Exception e)
             {
