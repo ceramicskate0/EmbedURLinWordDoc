@@ -1,5 +1,5 @@
 # EmbedURLinWordDoc
-.Net app to Generate Random Word (.doc) files with single URL link. Random contents and random name.
+.Net app to Generate Random Word (.doc) files with single URL link. Random contents and random name. Great for automation and testing.
 
 Only takes 1 arg which is the link to embed in word document.
 
